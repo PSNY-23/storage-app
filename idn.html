@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draggable Div - Tailwind</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="">
+
+    <!-- Draggable Box -->
+    <div id="draggable" 
+        class="draggable w-32 h-32 bg-blue-500 text-white 
+               cursor-grab active:cursor-grabbing absolute top-20 left-20">
+        Drag Me
+    </div>
+    <div id="draggable" 
+        class="draggable w-32 h-32 bg-red-500 text-white 
+               cursor-grab active:cursor-grabbing absolute top-20 left-20">
+        Drag Me
+    </div>
+    <div id="draggable" 
+        class="draggable w-32 h-32 bg-yellow-500 text-white 
+               cursor-grab active:cursor-grabbing absolute top-20 left-20">
+        Drag Me
+    </div>
+
+    <script>
+        const dragItem = document.querySelectorAll("draggable" );
+        let offsetX = 0, offsetY = 0, isDragging = false;
+
+        dragItem.addEventListener("mousedown", (e) => {
+            isDragging = true;
+            offsetX = e.clientX - dragItem.getBoundingClientRect().left;
+            offsetY = e.clientY - dragItem.getBoundingClientRect().top;
+            dragItem.classList.add("opacity-50"); // Add transparency effect
+        });
+
+        document.addEventListener("mousemove", (e) => {
+            if (!isDragging) return;
+            dragItem.style.left = `${e.clientX - offsetX}px`;
+            dragItem.style.top = `${e.clientY - offsetY}px`;
+        });
+
+        document.addEventListener("mouseup", () => {
+            isDragging = false;
+            dragItem.classList.remove("opacity-50");
+        });
+    </script>
+
+</body>
+</html>
