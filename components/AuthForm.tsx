@@ -57,7 +57,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
               fullName: values.fullName || "",
               email: values.email,
             })
-          : await signInUser({ email: values.email });
+          : await signInUser();
 
       setAccountId(user.accountId);
     } catch {
@@ -70,7 +70,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="auth-form">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="auth-form min-w-96">
           <h1 className="form-title">
             {type === "sign-in" ? "Sign In" : "Sign Up"}
           </h1>
@@ -157,7 +157,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
         </form>
       </Form>
 
-      {true && (
+      { accountId && (
         <OtpModal email={form.getValues("email")} accountId={accountId} />
       )}
     </>

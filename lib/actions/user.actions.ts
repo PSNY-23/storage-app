@@ -4,10 +4,11 @@ import { Query, ID } from "node-appwrite";
 import { createAdminClient } from "../appwrite";
 import { appwriteConfig } from "../appwrite/config";
 import { parseStringify } from "../utils";
+import { cookies } from "next/headers";
 
 const getUserByEmail = async (email: string) => {
-  const { database } = await createAdminClient();
-  const result = await database.listDocuments(appwriteConfig.databaseId, appwriteConfig.usersCollectionId, [
+  const { databases } = await createAdminClient();
+  const result = await databases.listDocuments(appwriteConfig.databaseId, appwriteConfig.usersCollectionId, [
     Query.equal("email", email),
   ]);
   return result.total > 0 ? result.documents[0] : null;
@@ -17,7 +18,7 @@ const handleError = (error: unknown, message: string) => {
   throw error;
 };
 
-const sendEmailOTP = async ({ email }: { email: string }) => {
+export const sendEmailOTP = async ({ email }: { email: string }) => {
   const { account } = await createAdminClient();
   try {
     const session = await account.createEmailToken(ID.unique(), email);
@@ -32,8 +33,8 @@ export const createAccount = async ({ fullName, email }: { fullName: string; ema
   const accountId = await sendEmailOTP({ email });
   if (!accountId) throw new Error("Failed to send and OTP");
   if (!existingUser) {
-    const { database } = await createAdminClient();
-    await database.createDocument(appwriteConfig.databaseId, appwriteConfig.usersCollectionId, ID.unique(), {
+    const { databases } = await createAdminClient();
+    await databases.createDocument(appwriteConfig.databaseId, appwriteConfig.usersCollectionId, ID.unique(), {
       fullName,
       email,
       avatar: "https://i.pinimg.com/1200x/1b/2e/31/1b2e314e767a957a44ed8f992c6d9098.jpg",
@@ -42,3 +43,23 @@ export const createAccount = async ({ fullName, email }: { fullName: string; ema
   }
   return parseStringify({ accountId });
 };
+
+export const verifySecret = async ({ accountId, password }: { accountId: string; password: string }) => {
+  try {
+    const { account } = await createAdminClient();
+    const session = await account.createSession(accountId, password);
+    (await cookies()).set("appwrite-session", session.secret, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "strict",
+      secure: true,
+    });
+    return parseStringify({sessionId: session.$id})
+  } catch (error) {
+    handleError(error, "Failed to verify OTP");
+  }
+};
+
+export const signInUser = async () => {
+  console.log("signing in....")
+}
