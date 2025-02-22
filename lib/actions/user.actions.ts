@@ -1,7 +1,7 @@
 "use server";
 
 import { Query, ID } from "node-appwrite";
-import { createAdminClient } from "../appwrite";
+import { createAdminClient, createSessionClient } from "../appwrite";
 import { appwriteConfig } from "../appwrite/config";
 import { parseStringify } from "../utils";
 import { cookies } from "next/headers";
@@ -42,6 +42,7 @@ export const createAccount = async ({ fullName, email }: { fullName: string; ema
       accountId,
     });
   }
+  console.log("accoutn created")
   return parseStringify({ accountId });
 };
 
@@ -63,4 +64,17 @@ export const verifySecret = async ({ accountId, password }: { accountId: string;
 
 export const signInUser = async () => {
   console.log("signing in....")
+}
+
+//function to get the current user/ session user;
+export const getCurrentUser = async () => {
+  const { databases, account } = await createSessionClient();
+  const result = await account.get();
+  const user = await databases.listDocuments(
+    appwriteConfig.databaseId, appwriteConfig.usersCollectionId,
+    [Query.equal("accountId", result.$id)]
+  )
+  if (user.total < 0 || user.total === 0) return null;
+  return parseStringify(user.documents[0])
+
 }
