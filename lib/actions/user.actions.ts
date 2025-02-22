@@ -5,6 +5,7 @@ import { createAdminClient } from "../appwrite";
 import { appwriteConfig } from "../appwrite/config";
 import { parseStringify } from "../utils";
 import { cookies } from "next/headers";
+import { avatarPlaceholderUrl } from "@/constants";
 
 const getUserByEmail = async (email: string) => {
   const { databases } = await createAdminClient();
@@ -37,7 +38,7 @@ export const createAccount = async ({ fullName, email }: { fullName: string; ema
     await databases.createDocument(appwriteConfig.databaseId, appwriteConfig.usersCollectionId, ID.unique(), {
       fullName,
       email,
-      avatar: "https://i.pinimg.com/1200x/1b/2e/31/1b2e314e767a957a44ed8f992c6d9098.jpg",
+      avatar: avatarPlaceholderUrl,
       accountId,
     });
   }
