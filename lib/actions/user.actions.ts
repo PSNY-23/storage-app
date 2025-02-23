@@ -62,9 +62,22 @@ export const verifySecret = async ({ accountId, password }: { accountId: string;
   }
 };
 
-export const signInUser = async () => {
-  console.log("signing in....")
-}
+export const signInUser = async ({ email }: { email: string }) => {
+  console.log(email)
+  try {
+    const existingUser = await getUserByEmail(email);
+
+    // User exists, send OTP
+    if (existingUser) {
+      await sendEmailOTP({ email });
+      return parseStringify({ accountId: existingUser.accountId });
+    }
+
+    return parseStringify({ accountId: null, error: "User not found" });
+  } catch (error) {
+    handleError(error, "Failed to sign in user");
+  }
+};
 
 //function to get the current user/ session user;
 export const getCurrentUser = async () => {

@@ -57,7 +57,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
               fullName: values.fullName || "",
               email: values.email,
             })
-          : await signInUser();
+          : await signInUser({email: values.email});
 
       setAccountId(user.accountId);
     } catch {
