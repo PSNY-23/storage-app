@@ -6,6 +6,7 @@ import { appwriteConfig } from "../appwrite/config";
 import { parseStringify } from "../utils";
 import { cookies } from "next/headers";
 import { avatarPlaceholderUrl } from "@/constants";
+import { redirect } from "next/navigation";
 
 const getUserByEmail = async (email: string) => {
   const { databases } = await createAdminClient();
@@ -63,8 +64,7 @@ export const verifySecret = async ({ accountId, password }: { accountId: string;
 };
 
 export const signInUser = async ({ email }: { email: string }) => {
-  console.log(email)
-  try {
+   try {
     const existingUser = await getUserByEmail(email);
 
     // User exists, send OTP
@@ -90,4 +90,18 @@ export const getCurrentUser = async () => {
   if (user.total < 0 || user.total === 0) return null;
   return parseStringify(user.documents[0])
 
+}
+
+
+export const signOutUser = async () => {
+  const { account } = await createSessionClient();
+  try {
+    //Delete the current session
+    await account.deleteSession('current');
+    (await cookies()).delete('appwrite-session');
+  } catch (error) {
+    console.error("Error logging out :",error)
+  } finally {
+    redirect("/sign-in")
+  }
 }

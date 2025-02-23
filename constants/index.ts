@@ -82,6 +82,6 @@ export const sortTypes = [
 ];
 
 export const avatarPlaceholderUrl =
-  "https://i.pinimg.com/1200x/1b/2e/31/1b2e314e767a957a44ed8f992c6d9098.jpg";
+  "https://static.vecteezy.com/system/resources/previews/011/490/381/non_2x/happy-smiling-young-man-avatar-3d-portrait-of-a-man-cartoon-character-people-illustration-isolated-on-white-background-vector.jpg";
 
 export const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
