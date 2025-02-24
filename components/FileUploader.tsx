@@ -9,6 +9,8 @@ import { getFileType } from "@/lib/utils";
 import Thumbnail from "./Thumbnail";
 import { MAX_FILE_SIZE } from "@/constants";
 import { toast } from "sonner";
+import { uploadFile } from "@/lib/actions/file.actions";
+import { usePathname } from "next/navigation";
 
 interface Props {
   ownerId: string;
@@ -17,6 +19,7 @@ interface Props {
 }
 
 const FileUploader = ({ ownerId, accountId, className }: Props) => {
+  const path = usePathname()
   const [files, setFiles] = useState<File[]>([]);
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     // Do something with the files
@@ -24,21 +27,27 @@ const FileUploader = ({ ownerId, accountId, className }: Props) => {
     const uploadPromises = acceptedFiles.map(async (file) => {
       if (file.size > MAX_FILE_SIZE) {
         setFiles((prevFiles) => prevFiles.filter((f) => f.name !== file.name));
-        return toast({
+        return toast(<p className="text-white">File can&apos;t be uploaded !</p>, {
           description: (
-            <p className="body-2 text-white">
-              <span className="font-semibold">{file.name}</span> is too large.
-              Max file size is 50MB.
+            <p className='body-2 text-white'>
+              <span className='font-semibold italic'>{file.name.slice(0, 20)}</span>
+               <p>is too large. Max file size is 50MB.</p>
             </p>
           ),
           className: "error-toast",
         });
       }
+      return uploadFile({ file, ownerId, accountId, path }).then((uploadedFile) => {
+        if (uploadedFile) {
+          setFiles((prevFiles) => prevFiles.filter((f) => f.name !== file.name))
+        }
+      })
     });
-  }, []);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+    await Promise.all(uploadPromises)
+  }, [ownerId, accountId, path]);
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
-  const handleRemoveFile = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, fileName: string) => {
+  const handleRemoveFile = (e: React.MouseEvent<HTMLElement, MouseEvent>, fileName: string) => {
     e.stopPropagation();
     setFiles((prevFiles) => prevFiles.filter((file) => file.name !== fileName));
   };
@@ -68,15 +77,13 @@ const FileUploader = ({ ownerId, accountId, className }: Props) => {
                   alt='remove'
                   height={24}
                   width={24}
-                  onClick={(e) => handleRemoveFile(e, file.name)}
+                  onClick={(e) => handleRemoveFile( e, file.name)}
                 />
               </li>
             );
           })}
         </ul>
       )}
-
-      
     </div>
   );
 };
