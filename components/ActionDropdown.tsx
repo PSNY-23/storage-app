@@ -2,7 +2,6 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -26,8 +25,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { renameFile } from "@/lib/actions/file.actions";
 import { usePathname } from "next/navigation";
-import { FileDetails } from "./ActionsModalContent";
-import ShareInput from "./ShareInput";
+import { FileDetails, ShareInput } from "./ActionsModalContent";
 
 const ActionDropdown = ({ file }: { file: Models.Document }) => {
     const path = usePathname()
@@ -37,7 +35,7 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
   const [name, setName] = useState(file.name);
     const [isLoading, setIsLoading] = useState(false);
     // this email is the email of the person whith who we would like to share the file.
-    const [emails, setEmails] = useState([])
+    const [emails, setEmails] = useState<string[]>([])
 
   const closeAllModels = () => {
     setIsModelOpen(false);
@@ -73,9 +71,7 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
           <DialogTitle className='text-center text-light-100'>{label}</DialogTitle>
                 {value === "rename" && <Input type='text' value={name} onChange={(e) => setName(e.target.value)} />}
                 {value === "details" && <FileDetails file={file} />}
-                {value === "share" && (
-                    <ShareInput file={file} />
-                )}
+                {value === "share" && ( <ShareInput file={file} onInputChange={setEmails()} onRemove={handleRemoveUser} />)}
         </DialogHeader>
         {["rename", "delete", "share"].includes(value) && (
           <DialogFooter className='flex flex-col gap-3 md:flex-row'>
