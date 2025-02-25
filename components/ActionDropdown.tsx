@@ -26,6 +26,8 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { renameFile } from "@/lib/actions/file.actions";
 import { usePathname } from "next/navigation";
+import { FileDetails } from "./ActionsModalContent";
+import ShareInput from "./ShareInput";
 
 const ActionDropdown = ({ file }: { file: Models.Document }) => {
     const path = usePathname()
@@ -33,7 +35,9 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [action, setAction] = useState<ActionType | null>(null);
   const [name, setName] = useState(file.name);
-  const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    // this email is the email of the person whith who we would like to share the file.
+    const [emails, setEmails] = useState([])
 
   const closeAllModels = () => {
     setIsModelOpen(false);
@@ -53,7 +57,12 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
       success = await actions[action.value as keyof typeof actions]();
       if (success) closeAllModels();
       setIsLoading(false)
-  };
+    };
+    
+    // this function would remove the user from the email array, if we wish not to share with someone.
+    const handleRemoveUser = () => {
+
+    }
   const renderDialogContent = () => {
     if (!action) return null;
     const { value, label } = action;
@@ -62,7 +71,11 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
       <DialogContent className='shad-dialog button'>
         <DialogHeader className='flex flex-col gap-3'>
           <DialogTitle className='text-center text-light-100'>{label}</DialogTitle>
-          {value === "rename" && <Input type='text' value={name} onChange={(e) => setName(e.target.value)} />}
+                {value === "rename" && <Input type='text' value={name} onChange={(e) => setName(e.target.value)} />}
+                {value === "details" && <FileDetails file={file} />}
+                {value === "share" && (
+                    <ShareInput file={file} />
+                )}
         </DialogHeader>
         {["rename", "delete", "share"].includes(value) && (
           <DialogFooter className='flex flex-col gap-3 md:flex-row'>

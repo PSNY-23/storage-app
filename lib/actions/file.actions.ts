@@ -33,7 +33,6 @@ export const uploadFile = async ({ file, ownerId, accountId, path }: UploadFileP
       users: [],
       bucketFileId: bucketFile.$id,
     };
-    console.log("url: ", fileDocument.url);
 
     const newFile = await databases
       .createDocument(appwriteConfig.databaseId, appwriteConfig.filesCollectionId, ID.unique(), fileDocument)
