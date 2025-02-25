@@ -43,7 +43,6 @@ export const createAccount = async ({ fullName, email }: { fullName: string; ema
       accountId,
     });
   }
-  console.log("accoutn created")
   return parseStringify({ accountId });
 };
 
