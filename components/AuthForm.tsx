@@ -11,7 +11,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { createAccount, signInUser } from "@/lib/actions/user.actions";
-import OtpModal from "@/components/OTPModel";
+import OtpModal from "@/components/OTPModal";
 
 type FormType = "sign-in" | "sign-up";
 
@@ -60,7 +60,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='auth-form min-w-96'>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='auth-form'>
           <h1 className='form-title'>{type === "sign-in" ? "Sign In" : "Sign Up"}</h1>
           {type === "sign-up" && (
             <FormField
