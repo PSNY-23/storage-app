@@ -8,7 +8,7 @@ interface Props {
 
 const UserCard = ({ fullName, avatar, email }: Props) => {
   return (
-    <div className='sidebar-user-info'>
+    <div className='sidebar-user-info bg-[#F2F4F8]'>
       <Image src={avatar} alt='Avatar' width={44} height={44} className='sidebar-user-avatar' />
       <div className='hidden lg:block'>
         <p className='subtitle-2 capitalize'>{fullName}</p>

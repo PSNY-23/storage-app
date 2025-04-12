@@ -42,7 +42,7 @@ const MobileNavigation = ({
         alt="logo"
         width={120}
         height={52}
-        className="h-auto"
+        className="h-auto text-brand"
       />
 
       <Sheet open={open} onOpenChange={setOpen}>

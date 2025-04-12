@@ -13,15 +13,9 @@ const Sidebar = ({ fullName, avatar, email }: Props) => {
   return (
     <aside className='sidebar'>
       <Link href='/'>
-        <Image
-          src='/assets/icons/logo-full-brand.svg'
-          alt='logo'
-          width={160}
-          height={50}
-          className='hidden h-auto lg:block'
-        />
-
-        <Image src='/assets/icons/logo-brand.svg' alt='logo' width={52} height={52} className='lg:hidden' />
+        <span className='text-3xl ml-7 font-bold text-dark-100 px-6 py-2 rounded-full ring-4 ring-brand shadow-md hover:shadow-lg hover:scale-105 transition-all duration-3000 ease-in-out animate-pulse'>
+          ShareIt 🚀
+        </span>
       </Link>
       <SidebarNav />
       <Image src='/assets/images/files-2.png' alt='logo' width={506} height={418} className='w-full' />

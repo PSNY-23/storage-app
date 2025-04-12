@@ -49,12 +49,16 @@ const AuthForm = ({ type }: { type: FormType }) => {
               email: values.email,
             })
           : await signInUser({ email: values.email });
-      if (!user) {
-        toast.error("Invalid credentials")
+      
+      if (!user.accountId) {
+        toast.error(user.error)
+        setErrorMessage(user.error)
       }
+      
 
       setAccountId(user.accountId);
-    } catch {
+    } catch (error) {
+       console.log(error)
       setErrorMessage("Failed to create account. Please try again.");
       toast("Failed to create account. Please try again.")
     } finally {
