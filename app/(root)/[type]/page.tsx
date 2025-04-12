@@ -13,7 +13,7 @@ const page = async ({searchParams, params }: SearchParamProps) => {
 
   let totalSize = 0;
 
-  files.documents.map((file) => {
+  files.documents.map((file: { size: number; }) => {
       totalSize = totalSize+ file.size
   })
   
